@@ -66,7 +66,7 @@ class Interceptor
     /**
      * Intercept the methods with Channel
      *
-     * @param Channel|InterceptorChannel $channel An already created Channel or InterceptorChannel object (optional)
+     * @param Channel $channel An already created Channel object (optional)
      * @param Interceptor|Interceptor[] $interceptors interceptors to be added
      *
      * @return InterceptorChannel

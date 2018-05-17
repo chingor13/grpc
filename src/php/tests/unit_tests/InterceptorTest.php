@@ -45,13 +45,12 @@ class SimpleRequest
 
 class InterceptorClient extends Grpc\BaseStub
 {
-
     /**
      * @param string $hostname hostname
      * @param array $opts channel options
-     * @param Channel|InterceptorChannel $channel (optional) re-use channel object
+     * @param Channel $channel (optional) re-use channel object
      */
-    public function __construct($hostname, $opts, $channel = null)
+    public function __construct($hostname, $opts, Channel $channel = null)
     {
         parent::__construct($hostname, $opts, $channel);
     }

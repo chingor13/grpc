@@ -38,7 +38,7 @@ class BaseStub
      *  - 'update_metadata': (optional) a callback function which takes in a
      * metadata array, and returns an updated metadata array
      *  - 'grpc.primary_user_agent': (optional) a user-agent string
-     *  - 'grpc.interceptors': (optional) Interceptors to wrap the connection with
+     *  - 'grpc.interceptor': (optional) Interceptors to wrap the connection with
      * @param Channel $channel An already created Channel object (optional)
      */
     public function __construct($hostname, $opts, Channel $channel = null)
@@ -220,7 +220,7 @@ class BaseStub
     /**
      * Create a function which can be used to create UnaryCall
      *
-     * @param Channel|InterceptorChannel   $channel
+     * @param Channel  $channel
      * @param callable $deserialize A function that deserializes the response
      *
      * @return \Closure
