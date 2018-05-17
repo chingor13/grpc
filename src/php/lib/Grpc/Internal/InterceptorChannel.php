@@ -29,13 +29,10 @@ class InterceptorChannel extends \Grpc\Channel
 
     /**
      * @param Channel $channel An already created Channel object (optional)
-     * @param Interceptor  $interceptor
+     * @param Interceptor $interceptor
      */
-    public function __construct($channel, $interceptor)
+    public function __construct(Channel $channel, Interceptor $interceptor)
     {
-        if (!is_a($channel, 'Grpc\Channel')) {
-            throw new \Exception('The channel argument is not a Channel object');
-        }
         $this->interceptor = $interceptor;
         $this->next = $channel;
     }

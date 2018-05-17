@@ -71,7 +71,7 @@ class Interceptor
      *
      * @return InterceptorChannel
      */
-    public static function intercept($channel, $interceptors)
+    public static function intercept(Channel $channel, $interceptors)
     {
         if (is_array($interceptors)) {
             for ($i = count($interceptors) - 1; $i >= 0; $i--) {
