@@ -38,9 +38,10 @@ class BaseStub
      *  - 'update_metadata': (optional) a callback function which takes in a
      * metadata array, and returns an updated metadata array
      *  - 'grpc.primary_user_agent': (optional) a user-agent string
-     * @param Channel|InterceptorChannel $channel An already created Channel or InterceptorChannel object (optional)
+     *  - 'grpc.interceptors': (optional) Interceptors to wrap the connection with
+     * @param Channel $channel An already created Channel object (optional)
      */
-    public function __construct($hostname, $opts, $channel = null)
+    public function __construct($hostname, $opts, Channel $channel = null)
     {
         $ssl_roots = file_get_contents(
             dirname(__FILE__).'/../../../../etc/roots.pem'
@@ -58,18 +59,10 @@ class BaseStub
         if (!empty($opts['grpc.ssl_target_name_override'])) {
             $this->hostname_override = $opts['grpc.ssl_target_name_override'];
         }
-        if ($channel) {
-            if (!is_a($channel, 'Grpc\Channel') &&
-                !is_a($channel, 'Grpc\Internal\InterceptorChannel')) {
-                throw new \Exception('The channel argument is not a Channel object '.
-                    'or an InterceptorChannel object created by '.
-                    'Interceptor::intercept($channel, Interceptor|Interceptor[] $interceptors)');
-            }
-            $this->channel = $channel;
-            return;
+        $this->channel = $channel ?: static::getDefaultChannel($hostname, $opts);
+        if (isset($opts['grpc.interceptor'])) {
+            $this->channel = Interceptor::intercept($this->channel, $opts['grpc.interceptor']);
         }
-
-        $this->channel = static::getDefaultChannel($hostname, $opts);
     }
 
     /**
@@ -122,7 +115,7 @@ class BaseStub
      * @param int $timeout in microseconds
      *
      * @return bool true if channel is ready
-     * @throw Exception if channel is in FATAL_ERROR state
+     * @throws Exception if channel is in FATAL_ERROR state
      */
     public function waitForReady($timeout)
     {
@@ -206,7 +199,7 @@ class BaseStub
      * @param array $metadata The metadata map
      *
      * @return array $metadata Validated and key-normalized metadata map
-     * @throw InvalidArgumentException if key contains invalid characters
+     * @throws InvalidArgumentException if key contains invalid characters
      */
     private function _validate_and_normalize_metadata($metadata)
     {
